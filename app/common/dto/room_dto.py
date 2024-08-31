@@ -16,9 +16,9 @@ class RoomDTOAdd(Room):
     pass
 
 
-class RoomDTOUpdate(Room, IdBase):
+class RoomDTOUpdate(Room):
     pass
 
 
-class RoomDTO(RoomDTOUpdate):
+class RoomDTO(RoomDTOUpdate, IdBase):
     pass

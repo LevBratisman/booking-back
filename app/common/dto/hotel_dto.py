@@ -14,10 +14,10 @@ class HotelDTOAdd(Hotel):
     pass
 
 
-class HotelDTOUpdate(Hotel, IdBase):
+class HotelDTOUpdate(Hotel):
     pass
 
 
-class HotelDTO(HotelDTOUpdate):
+class HotelDTO(HotelDTOUpdate, IdBase):
     pass
 

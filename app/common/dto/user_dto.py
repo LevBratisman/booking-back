@@ -10,9 +10,9 @@ class UserDTOAdd(User):
     pass
 
 
-class UserDTOUpdate(User, IdBase):
+class UserDTOUpdate(User):
     pass
 
 
-class UserDTO(UserDTOUpdate):
+class UserDTO(UserDTOUpdate, IdBase):
     pass

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from fastapi import Depends
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, update, delete
 
 from db.base_class import ModelType
 from db.session import get_session
@@ -45,7 +45,6 @@ class AbstractRepository(ABC):
 class CRUDBaseRepository(AbstractRepository):
     model: ModelType = None
 
-
     @classmethod
     async def get_one(cls, **filters) -> ModelType:
         session: AsyncSession = await get_session()
@@ -65,8 +64,12 @@ class CRUDBaseRepository(AbstractRepository):
     
 
     @classmethod
-    async def get_by_user(cls, **filters) -> list[ModelType]:
-        pass
+    async def get_by_user(cls, user_id, **filters) -> list[ModelType]:
+        session: AsyncSession = await get_session()
+        query = select(cls.model).filter_by(**filters, user_id=user_id)
+        result = await session.execute(query)
+
+        return result.scalars().all()
 
 
     @classmethod
@@ -79,18 +82,26 @@ class CRUDBaseRepository(AbstractRepository):
     
 
     @classmethod
-    async def add(cls, **data):
+    async def add(cls, **data) -> ModelType:
         session: AsyncSession = await get_session()
-        query = insert(cls.model).values(**data)
-        await session.execute(query)
+        query = insert(cls.model).values(**data).returning(cls.model)
+        result = await session.execute(query)
         await session.commit()
+
+        return result.scalar_one_or_none()
         
 
     @classmethod
-    async def update(cls):
-        pass
+    async def update(cls, instance_id: int, **data) -> ModelType:
+        session: AsyncSession = await get_session()
+        query = update(cls.model).where(cls.model.id == instance_id).values(**data).returning(cls.model)
+        await session.execute(query)
+        await session.commit()
 
 
     @classmethod
-    async def delete(cls):
-        pass
+    async def delete(cls, *, instance_id: int) -> ModelType:
+        session: AsyncSession = await get_session()
+        query = delete(cls.model).where(cls.model.id == instance_id)
+        await session.execute(query)
+        await session.commit()
