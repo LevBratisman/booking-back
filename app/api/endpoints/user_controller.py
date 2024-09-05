@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
 from fastapi_restful.cbv import cbv
 
-from common.repository.user_repository import UserRepository
-from common.dto.user_dto import UserDTO, UserDTOAdd, UserDTOUpdate
+from app.api.deps import get_current_user
+from app.common.models.user import User
+from app.common.repository.user_repository import UserRepository
+from app.common.dto.user_dto import UserDTO, UserDTOAdd, UserDTOUpdate
 
 router = APIRouter()
 
@@ -15,16 +17,14 @@ class UserAPI:
         return result
 
 
+    @router.get("/me")
+    async def read_user_me(self, user: User = Depends(get_current_user)) -> UserDTO:
+        return user
+
+
     @router.get("/{instance_id}")
     async def get_by_id(self, instance_id: int) -> UserDTO:
         result = await UserRepository.get_by_id(instance_id=instance_id)
-        return result
-    
-
-    @router.post("/")
-    async def add_user(self, data: UserDTOAdd) -> UserDTO:
-        converted_data = data.to_dict()
-        result = await UserRepository.add(**converted_data)
         return result
     
 
@@ -36,6 +36,9 @@ class UserAPI:
     
 
     @router.delete("/{instance_id}")
-    async def delete_user(seld, instance_id: int):
+    async def delete_user(self, instance_id: int):
         await UserRepository.delete(instance_id=instance_id)
         return 'DELETED'
+    
+
+    

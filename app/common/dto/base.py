@@ -1,8 +1,8 @@
 from pydantic import BaseModel, ConfigDict
 from typing import TypeVar
-from datetime import datetime
+from datetime import datetime, date
 
-from db.base_class import ModelType
+from app.db.base_class import ModelType
 
 
 class BaseDTO(BaseModel):
@@ -22,6 +22,11 @@ class UserDependsBase(BaseDTO):
 
 class TimeStampedBase(BaseDTO):
     created_at: datetime
+
+
+class TermDTO(BaseDTO):
+    date_from: date
+    date_to: date
 
 
 CreateDTOType = TypeVar('CreateDTOType', bound=BaseDTO)

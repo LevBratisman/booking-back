@@ -2,7 +2,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey, Date, Computed
 from datetime import date
 
-from db.base_class import Base, TimeStampedModel
+from app.db.base_class import Base, TimeStampedModel
 
 class Booking(Base):
     room_id: Mapped[int] = mapped_column(ForeignKey('room.id'))

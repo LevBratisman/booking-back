@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import JSON, ForeignKey
 
-from db.base_class import Base
+from app.db.base_class import Base
 
 class Room(Base):
     hotel_id: Mapped[int] = mapped_column(ForeignKey('hotel.id'))

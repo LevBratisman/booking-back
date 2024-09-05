@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends
 from fastapi_restful.cbv import cbv
 
-from common.models.user import User
-from common.repository.booking_repository import BookingRepository
-from common.dto.booking_dto import BookingDTO, BookingDTOAdd, BookingDTOUpdate
-from api.deps import get_current_user
+from app.common.models.user import User
+from app.common.repository.booking_repository import BookingRepository
+from app.common.dto.booking_dto import BookingDTO, BookingDTOAdd, BookingDTOUpdate
+from app.api.deps import get_current_user
+
+from app.core.exceptions import RoomCannotBeBookedException, BookingDeleteException
 
 router = APIRouter()
 
@@ -29,21 +31,19 @@ class BookingAPI:
         return result
     
 
-    @router.post("/")
-    async def add_booking(self, data: BookingDTOAdd) -> BookingDTO:
-        converted_data = data.to_dict()
-        result = await BookingRepository.add(**converted_data)
-        return result
-    
-
-    @router.patch("/{instance_id}")
-    async def update_booking(self, data: BookingDTOUpdate, instance_id: int):
-        converted_data = data.to_dict()
-        await BookingRepository.update(instance_id=instance_id, **converted_data)
-        return 'UPDATED'
+    @router.post("/{room_id}")
+    async def add_booking(self, data: BookingDTOAdd, room_id: int, user: User = Depends(get_current_user)) -> BookingDTO | dict:
+        booking = await BookingRepository.add(room_id=room_id, user_id=user.id, data=data)
+        if not booking:
+            raise RoomCannotBeBookedException
+        else:
+            return booking
     
 
     @router.delete("/{instance_id}")
-    async def delete_booking(seld, instance_id: int):
-        await BookingRepository.delete(instance_id=instance_id)
-        return 'DELETED'
+    async def delete_booking(seld, instance_id: int, user: User = Depends(get_current_user)) -> BookingDTO | None:
+        booking = await BookingRepository.delete(instance_id=instance_id, user_id=user.id)
+        if not booking:
+            raise BookingDeleteException
+        else:
+            return booking

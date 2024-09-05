@@ -1,6 +1,6 @@
 from datetime import date
 
-from common.dto.base import IdBase, UserDependsBase, BaseDTO
+from app.common.dto.base import IdBase, UserDependsBase, BaseDTO
 
 
 class Booking(UserDependsBase):
@@ -10,8 +10,9 @@ class Booking(UserDependsBase):
     price: int
 
 
-class BookingDTOAdd(Booking):
-    pass
+class BookingDTOAdd(BaseDTO):
+    date_from: date
+    date_to: date
 
 
 class BookingDTOUpdate(Booking):

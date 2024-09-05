@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.repository.crud_base_repository import CRUDBaseRepository
-from db.base_class import ModelType
-from common.dto.base import ModelDTOType
-from common.dto.base import model_to_dto
+from app.common.repository.crud_base_repository import CRUDBaseRepository
+from app.db.base_class import ModelType
+from app.common.dto.base import ModelDTOType
+from app.common.dto.base import model_to_dto
 
 class BaseService:
     def __init__(

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from fastapi_restful.cbv import cbv
 
-from common.repository.room_repository import RoomRepository
-from common.dto.room_dto import RoomDTO, RoomDTOAdd, RoomDTOUpdate
+from app.common.repository.room_repository import RoomRepository
+from app.common.dto.room_dto import RoomDTO, RoomDTOAdd, RoomDTOUpdate
 
 router = APIRouter()
 

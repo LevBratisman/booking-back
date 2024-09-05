@@ -4,9 +4,9 @@ from datetime import UTC, datetime, timedelta
 
 from pydantic import EmailStr
 
-from common.models.user import User
-from core.config import settings
-from common.repository.user_repository import UserRepository
+from app.common.models.user import User
+from app.core.config import settings
+from app.common.repository.user_repository import UserRepository
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

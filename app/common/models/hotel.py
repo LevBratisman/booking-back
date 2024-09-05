@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import JSON
 
-from db.base_class import Base
+from app.db.base_class import Base
 
 class Hotel(Base):
     name: Mapped[str] = mapped_column(unique=True)

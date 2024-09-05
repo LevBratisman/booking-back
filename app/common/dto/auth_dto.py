@@ -1,6 +1,6 @@
 from pydantic import EmailStr
 
-from common.dto.base import BaseDTO
+from app.common.dto.base import BaseDTO
 
 
 class RegisterUserDTO(BaseDTO):

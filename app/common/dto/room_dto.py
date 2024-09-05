@@ -1,4 +1,4 @@
-from common.dto.base import IdBase, BaseDTO
+from app.common.dto.base import IdBase, BaseDTO
 
 
 class Room(BaseDTO):
