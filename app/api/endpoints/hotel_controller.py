@@ -5,25 +5,29 @@ from app.common.repository.hotel_repository import HotelRepository
 from app.common.dto.hotel_dto import HotelDTO, HotelDTOAdd, HotelDTOUpdate, HotelWithLeftRoomsDTO
 from app.common.dto.base import TermDTO
 
+from app.common.dto.room_dto import RoomWithLeftRoomsDTO
+
 router = APIRouter()
 
 @cbv(router)
 class HotelAPI:
 
     @router.get("/list")
-    async def get_all(self) -> list[HotelDTO]:
+    async def get_all() -> list[HotelDTO]:
         result = await HotelRepository.get_all()
         return result
     
 
-    @router.get("/{location}")
+    @router.post("/{location}")
     async def get_hotels_by_location(self, term_data: TermDTO, location: str) -> list[HotelWithLeftRoomsDTO]:
         hotels = await HotelRepository.get_by_location(location=location, term_data=term_data)
+        return hotels
 
 
-    @router.get("/{instance_id}/rooms")
-    async def get_rooms_by_hotel(self, term_data: TermDTO, instance_id: int):
+    @router.post("/{instance_id}/rooms")
+    async def get_rooms_by_hotel(self, term_data: TermDTO, instance_id: int) -> list[RoomWithLeftRoomsDTO]:
         rooms = await HotelRepository.get_rooms_by_hotel(instance_id=instance_id, term_data=term_data)
+        return rooms
 
 
     async def get_all(self) -> list[HotelDTO]:

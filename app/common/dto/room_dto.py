@@ -22,3 +22,6 @@ class RoomDTOUpdate(Room):
 
 class RoomDTO(RoomDTOUpdate, IdBase):
     pass
+
+class RoomWithLeftRoomsDTO(RoomDTO):
+    rooms_left: int
