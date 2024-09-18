@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Response
 
-from app.common.dto.user_dto import UserDTO
+from app.common.dto.user_dto import UserDTO, UserInfoDTO
 from app.core.security import get_password_hash, authenticate_user, create_access_token
 from app.common.dto.auth_dto import RegisterUserDTO, LoginUserDTO
 from app.common.repository.user_repository import UserRepository
@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 @router.post('/register')
-async def register_user(data: RegisterUserDTO) -> UserDTO:
+async def register_user(data: RegisterUserDTO) -> UserInfoDTO:
     existing_user = await UserRepository.get_one(email=data.email)
     if existing_user:
         raise UserAlreadyExistsException
@@ -22,7 +22,9 @@ async def register_user(data: RegisterUserDTO) -> UserDTO:
 
     result = await UserRepository.add(
         email=data.email,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        username=data.username,
+        age=data.age
     )
     return result
 

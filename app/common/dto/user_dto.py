@@ -6,6 +6,16 @@ class User(BaseDTO):
     email: str
     hashed_password: str
     role: RoleEnum
+    username: str
+    age: int
+
+
+class UserInfoDTO(BaseDTO):
+    email: str
+    role: RoleEnum
+    username: str
+    age: int
+
 
 class UserDTOAdd(User):
     pass

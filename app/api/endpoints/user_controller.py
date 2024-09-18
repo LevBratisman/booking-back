@@ -4,7 +4,7 @@ from fastapi_restful.cbv import cbv
 from app.api.deps import get_current_user
 from app.common.models.user import User
 from app.common.repository.user_repository import UserRepository
-from app.common.dto.user_dto import UserDTO, UserDTOAdd, UserDTOUpdate
+from app.common.dto.user_dto import UserDTO, UserDTOAdd, UserDTOUpdate, UserInfoDTO
 
 router = APIRouter()
 
@@ -18,7 +18,7 @@ class UserAPI:
 
 
     @router.get("/me")
-    async def read_user_me(self, user: User = Depends(get_current_user)) -> UserDTO:
+    async def read_user_me(self, user: User = Depends(get_current_user)) -> UserInfoDTO:
         return user
 
 

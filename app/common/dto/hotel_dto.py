@@ -1,6 +1,6 @@
 from datetime import date
 
-from app.common.dto.base import IdBase, BaseDTO
+from app.common.dto.base import IdBase, BaseDTO, TermDTO
 
 
 class Hotel(BaseDTO):
@@ -25,3 +25,8 @@ class HotelDTO(HotelDTOUpdate, IdBase):
 
 class HotelWithLeftRoomsDTO(HotelDTO):
     rooms_left: int
+
+
+class HotelFiltersDTO(TermDTO):
+    name: str | None
+    location: str | None

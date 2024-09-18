@@ -8,7 +8,7 @@ from app.common.models.room import Room
 from app.common.dto.room_dto import RoomWithLeftRoomsDTO
 
 from app.common.dto.base import TermDTO
-from app.common.dto.hotel_dto import HotelDTO, HotelWithLeftRoomsDTO
+from app.common.dto.hotel_dto import HotelDTO, HotelFiltersDTO, HotelWithLeftRoomsDTO
 
 from app.db.session import async_session_maker
 
@@ -48,6 +48,17 @@ class HotelRepository(CRUDBaseRepository):
             result = await session.execute(get_rooms_left)
 
             return result.mappings().all()
+        
+
+    
+    @classmethod
+    async def get_by_filters(cls, filters) -> list[HotelDTO]:
+        async with async_session_maker() as session:
+            get_hotels = select(cls.model).filter_by(**filters)
+
+            result = await session.execute(get_hotels)
+
+            return result.scalars().all()
             
 
 

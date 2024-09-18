@@ -4,9 +4,11 @@ from datetime import datetime, date
 
 from app.db.base_class import ModelType
 
+from app.utils.string_utils import to_camel
+
 
 class BaseDTO(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, alias_generator=to_camel, populate_by_name=True)
 
     def to_dict(self):
         return dict(self)
@@ -25,8 +27,8 @@ class TimeStampedBase(BaseDTO):
 
 
 class TermDTO(BaseDTO):
-    date_from: date
-    date_to: date
+    date_from: date | None
+    date_to: date | None
 
 
 CreateDTOType = TypeVar('CreateDTOType', bound=BaseDTO)
