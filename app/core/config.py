@@ -9,6 +9,15 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
 
+    REDIS_PASSWORD: str
+    REDIS_USER: str
+    REDIS_USER_PASSWORD: str
+
+    SMTP_HOST: str
+    SMTP_PORT: int
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
 
@@ -17,6 +26,11 @@ class Settings(BaseSettings):
     @property
     def POSTGRES_DATABASE_URI(self):
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+    
+    @property
+    def REDIS_URI(self):
+        return f"redis://0.0.0.0:6380"
+
 
     model_config = SettingsConfigDict(env_file="../.env")
 

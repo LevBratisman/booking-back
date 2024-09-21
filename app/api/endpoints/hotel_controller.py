@@ -1,5 +1,9 @@
+import asyncio
 from fastapi import APIRouter, Depends
 from fastapi_restful.cbv import cbv
+from fastapi_cache.decorator import cache
+from datetime import date
+
 
 from app.common.repository.hotel_repository import HotelRepository
 from app.common.dto.hotel_dto import HotelDTO, HotelDTOAdd, HotelDTOUpdate, HotelWithLeftRoomsDTO, HotelFiltersDTO
@@ -11,16 +15,16 @@ router = APIRouter()
 
 @cbv(router)
 class HotelAPI:
-
-    @router.post("/list")
-    async def get_all(filters: dict) -> list[HotelDTO]:
-        result = await HotelRepository.get_by_filters(filters)
-        return result
     
-
-    @router.post("/{location}")
-    async def get_hotels_by_filters(self, term_data: TermDTO, location: str) -> list[HotelWithLeftRoomsDTO]:
-        hotels = await HotelRepository.get_by_location(location=location, term_data=term_data)
+    @router.get("/{location}")
+    @cache(expire=20)
+    async def get_hotels_by_location(
+        self, 
+        location: str,
+        date_from: date, 
+        date_to: date
+    ) -> list[HotelWithLeftRoomsDTO]:
+        hotels = await HotelRepository.get_by_location(location=location, date_from=date_from, date_to=date_to)
         return hotels
 
 
@@ -31,6 +35,7 @@ class HotelAPI:
 
 
     @router.get("/all")
+    @cache(expire=20)
     async def get_all(self) -> list[HotelDTO]:
         result = await HotelRepository.get_all()
         return result

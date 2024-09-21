@@ -5,6 +5,7 @@ from app.common.models.user import User
 from app.common.repository.booking_repository import BookingRepository
 from app.common.dto.booking_dto import BookingDTO, BookingDTOAdd, BookingDTOUpdate
 from app.api.deps import get_current_user
+from app.tasks.tasks import send_booking_information_email
 
 from app.core.exceptions import RoomCannotBeBookedException, BookingDeleteException
 
@@ -35,9 +36,13 @@ class BookingAPI:
     async def add_booking(self, data: BookingDTOAdd, room_id: int, user: User = Depends(get_current_user)) -> BookingDTO | dict:
         booking = await BookingRepository.add(room_id=room_id, user_id=user.id, data=data)
         if not booking:
-            raise RoomCannotBeBookedException
-        else:
-            return booking
+            raise RoomCannotBeBookedException  
+
+        booking_dict = BookingDTO.model_validate(booking).model_dump()
+
+        send_booking_information_email.delay(booking_dict, user.email)
+
+        return booking
     
 
     @router.delete("/{instance_id}")

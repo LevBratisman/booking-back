@@ -13,7 +13,7 @@ class BookingRepository(CRUDBaseRepository):
     model = Booking
 
     @classmethod
-    async def add(cls, room_id: int, user_id: int, data: BookingDTOAdd):
+    async def add(cls, room_id: int, user_id: int, data: BookingDTOAdd) -> BookingDTO:
         async with async_session_maker() as session:
             target_room = await RoomRepository.get_by_id(instance_id=room_id)
 

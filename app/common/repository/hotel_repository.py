@@ -1,3 +1,4 @@
+from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, and_, or_
 
@@ -17,7 +18,7 @@ class HotelRepository(CRUDBaseRepository):
     model = Hotel
     
     @classmethod
-    async def get_by_location(cls, location: str, term_data: TermDTO) -> list[HotelWithLeftRoomsDTO]:
+    async def get_by_location(cls, location: str, date_from: date, date_to: date) -> list[HotelWithLeftRoomsDTO]:
         async with async_session_maker() as session:
             get_rooms_left = select(Hotel.__table__.columns, (Hotel.rooms_quantity - func.count(Booking.id)).label('rooms_left')
                 ).select_from(Hotel
@@ -28,16 +29,16 @@ class HotelRepository(CRUDBaseRepository):
                         Booking.room_id == Room.id,
                         or_(
                             and_(
-                                Booking.date_to >= term_data.date_from,
-                                Booking.date_to <= term_data.date_to
+                                Booking.date_to >= date_from,
+                                Booking.date_to <= date_to
                             ),
                             and_(
-                                Booking.date_from >= term_data.date_from,
-                                Booking.date_from <= term_data.date_to
+                                Booking.date_from >= date_from,
+                                Booking.date_from <= date_to
                             ),
                             and_(
-                                Booking.date_from <= term_data.date_from,
-                                Booking.date_to >= term_data.date_to
+                                Booking.date_from <= date_from,
+                                Booking.date_to >= date_to
                             )
                         )
                     )

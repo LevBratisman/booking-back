@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, insert, update, delete
 
 from app.db.base_class import ModelType
-from app.db.session import async_session_maker
+from app.db.session import async_session_maker, async_session_maker_nullpool
 
 
 class AbstractRepository(ABC):
@@ -56,7 +56,7 @@ class CRUDBaseRepository(AbstractRepository):
 
     @classmethod
     async def get_by_id(cls, *, instance_id: int) -> ModelType:
-        async with async_session_maker() as session:
+        async with async_session_maker_nullpool() as session:
             query = select(cls.model).where(cls.model.id == instance_id)
             result = await session.execute(query)
 
@@ -74,7 +74,7 @@ class CRUDBaseRepository(AbstractRepository):
 
     @classmethod
     async def get_all(cls, **filters) -> list[ModelType]:
-        async with async_session_maker() as session:
+        async with async_session_maker_nullpool() as session:
             query = select(cls.model).filter_by(**filters)
             result = await session.execute(query)
 
