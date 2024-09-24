@@ -8,7 +8,7 @@ class Hotel(BaseDTO):
     location: str
     rooms_quantity: int
     services: list[str] | None = None
-    image_id: int | None = None
+    image: str | None = None
 
 
 class HotelDTOAdd(Hotel):

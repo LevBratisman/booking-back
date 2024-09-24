@@ -1,5 +1,8 @@
 import asyncio
-from fastapi import APIRouter, Depends
+import shutil
+from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi.responses import FileResponse
+from pathlib import Path
 from fastapi_restful.cbv import cbv
 from fastapi_cache.decorator import cache
 from datetime import date
@@ -9,7 +12,12 @@ from app.common.repository.hotel_repository import HotelRepository
 from app.common.dto.hotel_dto import HotelDTO, HotelDTOAdd, HotelDTOUpdate, HotelWithLeftRoomsDTO, HotelFiltersDTO
 from app.common.dto.base import TermDTO
 
+from app.utils.s3_client import S3Client
+
 from app.common.dto.room_dto import RoomWithLeftRoomsDTO
+
+from app.core.config import settings
+
 
 router = APIRouter()
 
@@ -52,6 +60,18 @@ class HotelAPI:
         converted_data = data.to_dict()
         result = await HotelRepository.add(**converted_data)
         return result
+    
+
+    @router.post("/upload/image")
+    async def upload_hotel_image(self, image: UploadFile = File(...)):
+        with open(f"app/images/{image.filename}.webp", "wb+") as file:
+            shutil.copyfileobj(image.file, file)
+
+    
+    @router.get("/get/image")
+    async def get_hotel_image(self, uuid: str) -> FileResponse:
+        image_path = Path(f"app/images/{uuid}.webp")
+        return FileResponse(image_path, media_type="image/webp")
     
 
     @router.patch("/{instance_id}")

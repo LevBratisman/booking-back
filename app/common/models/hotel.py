@@ -8,4 +8,4 @@ class Hotel(Base):
     location: Mapped[str] = mapped_column()
     rooms_quantity: Mapped[int] = mapped_column()
     services: Mapped[list[str] | None] = mapped_column(JSON)
-    image_id: Mapped[int | None] = mapped_column()
+    image: Mapped[str] = mapped_column(JSON, nullable=True)

@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
 
+    S3_ACCESS_KEY: str
+    S3_SECRET_KEY: str
+    S3_ENDPOINT_URL: str
+    S3_BUCKET_NAME: str
+
     BACKEND_CORS_ORIGINS: str
 
     @property

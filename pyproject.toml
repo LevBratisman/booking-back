@@ -23,6 +23,8 @@ fastapi-cache2 = {extras = ["redis"], version = "^0.2.2"}
 celery = "^5.4.0"
 flower = "^2.0.1"
 pillow = "^10.4.0"
+python-multipart = "^0.0.10"
+aiobotocore = "^2.15.1"
 
 
 [build-system]
